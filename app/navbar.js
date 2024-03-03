@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Link href="/" style={styles.link}> //kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+        <Link href="/" style={styles.link}> //kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkgit 
           Home
         </Link>
         <Link href="/services" style={styles.link}>
