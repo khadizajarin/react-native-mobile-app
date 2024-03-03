@@ -4,27 +4,27 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 
 const Service = ({ service }) => {
-  const { id, name, image, about } = service;
+  const { id, name, image, description } = service;
   const navigation = useNavigation();
 
-  const handleDetails = () => {
-    navigation.navigate('details', { serviceId: id });
-  };
+  // const handleDetails = () => {
+  //   navigation.navigate('details', { serviceId: id });
+  // };
 
   return (
     <View style={styles.container}>
-    <Image source={{ uri: image }} style={styles.image} />
-    <View style={styles.contentContainer}>
-      <Text style={styles.title}>{name}</Text>
-      <Text>{about}</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('details', { serviceId: id })}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Details</Text>
-      </TouchableOpacity>
+      <Image source={{ uri: image }} style={styles.image} />
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>{name}</Text>
+        <Text>{description}</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('details', { serviceId: id })}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Details</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
   );
 };
 

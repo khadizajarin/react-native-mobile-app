@@ -16,14 +16,14 @@ const Navbar = () => {
         <Link href="/services" style={styles.link}>
           Services
         </Link>
-        <Link href="/lo" style={styles.link}>
+        <Link href="/contact" style={styles.link}>
           Contact
         </Link>
       </View>
 
       {user && (
         <View style={styles.row}>
-        <Link href="/review" style={styles.link}>
+        <Link href="/reviews" style={styles.link}>
           Reviews
         </Link>
         <Link href="/location" style={styles.link}>

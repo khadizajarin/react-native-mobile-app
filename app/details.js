@@ -1,12 +1,13 @@
-import { Image, ScrollView, StyleSheet, Text, View,  Button, TouchableOpacity, TextInput } from 'react-native'
-import React, { useContext, useState } from 'react'
-import Events from './../assets/data';
+import { Image, ScrollView, StyleSheet, Text, View,  Button, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+// import Events from './../assets/data';
 import { useRoute } from '@react-navigation/native';
 import Navbar from './navbar';
 import useAuthentication from './Hooks/useAuthentication';
-import { app, db, collection, addDoc } from "./Hooks/firebase.config"
+import { app, db,  addDoc } from "./Hooks/firebase.config"
 import { useNavigation } from 'expo-router';
 import Video from './video';
+import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
 
 
 
@@ -14,10 +15,32 @@ import Video from './video';
 const Details = () => {
   
   const { user } = useAuthentication(app);
-
   const route = useRoute(); 
   const navigation = useNavigation();
   const { serviceId } = route.params || {};
+  // console.log("serviceId", serviceId);
+
+
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Initialize isLoading state to true
+  const fetchServices = async () => {
+    try {
+      const servicesQuerySnapshot = await getDocs(collection(db, "services"));
+      const servicesData = [];
+      servicesQuerySnapshot.forEach((doc) => {
+        servicesData.push(doc.data());
+      });
+      setEvents(servicesData); // Update the state with servicesData array
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    } finally {
+      setIsLoading(false); // Set isLoading to false after fetching is complete
+    }
+  };
+  useEffect(() => {
+    fetchServices();
+  }, []);
+  // console.log("it is in details page",events); 
 
   const [numberOfGuests, setNumberOfGuests] = useState('');
   const [venue, setVenue] = useState('');
@@ -46,7 +69,6 @@ const Details = () => {
         eventData: eventData,
       });
       console.log('Document written with ID: ', docRef.id);
-      // Clear the form fields after successful booking
       setNumberOfGuests("");
       setVenue("");
       setTime("");
@@ -67,73 +89,76 @@ const Details = () => {
            <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray' }}>
               <Navbar></Navbar>
           </View>
-             {Events.filter((event) => (event.id === serviceId)).map((event, id) => (
-                <View key={id} style={{ margin: 10 }}>
-                  <Image source={{ uri: event.image }} style={{  borderRadius: 10, height: 200, margin: 10 }} />
-                  <Text style={{fontFamily: "serif", fontSize: 20, fontWeight: 'bold', marginTop: 4, color: '#689A7C', }}>{event.name}</Text>
-                  <Text style={{fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginTop: 4, color: '#689A7C', }}>Approximate Cost: {event.price} (For 50 Guests)</Text>
-                  <Text style={{fontFamily: "serif", fontSize: 16, marginBottom: 15, color: '#689A7C', }}>{event.description}</Text>  
+              {isLoading ? (
+              <ActivityIndicator size="large" color="#689A7C"  />
+              ) : ( 
+              <View>
+                  {events.filter((event) => (event.id === serviceId)).map((event, id) => (
+                    <View key={id} style={{ margin: 10 }}>
+                      <Image source={{ uri: event.image }} style={{  borderRadius: 10, height: 200, margin: 10 }} />
+                      <Text style={{fontFamily: "serif", fontSize: 20, fontWeight: 'bold', marginTop: 4, color: '#689A7C', }}>{event.name}</Text>
+                      <Text style={{fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginTop: 4, color: '#689A7C', }}>Approximate Cost: {event.price} (For 50 Guests)</Text>
+                      <Text style={{fontFamily: "serif", fontSize: 16, marginBottom: 15, color: '#689A7C', }}>{event.description}</Text>  
 
-                  <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray', borderTopWidth: 1, borderTopColor:'gray'}}>
-                    <Video></Video>
-                  </View>
+                      <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray', borderTopWidth: 1, borderTopColor:'gray'}}>
+                        <Video></Video>
+                      </View>
 
-                  
-
-                   {/* Form for booking */}
-                  <View style={{ marginTop: 20 }}>
-                    <Text style={{ fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#689A7C', }}>Do you want to book? Please submit the infos and our representative will contact you. </Text>
-                    <TextInput
-                      placeholder="Number of Guests"
-                      style={[styles.input, { color: '#689A7C' }]}
-                      placeholderTextColor="#689A7C"
-                      value={numberOfGuests}
-                      onChangeText={text => setNumberOfGuests(text)}
-                    />
-                    <TextInput
-                      placeholder="Venue"
-                      style={[styles.input, { color: '#689A7C' }]}
-                      placeholderTextColor="#689A7C"
-                      value={venue}
-                      onChangeText={text=>setVenue(text)}
-                    />
-                    <TextInput
-                      placeholder="Time"
-                      style={[styles.input, { color: '#689A7C' }]}
-                      placeholderTextColor="#689A7C"
-                      value={time}
-                      onChangeText={text=>setTime(text)}
-                    />
-                    <TextInput
-                      placeholder="Date"
-                      style={[styles.input, { color: '#689A7C' }]}
-                      placeholderTextColor="#689A7C"
-                      value={date}
-                      onChangeText={text=>setDate(text)}
-                    />
-                    <TextInput
-                      placeholder="Phone Number"
-                      style={[styles.input, { color: '#689A7C' }]}
-                      placeholderTextColor="#689A7C"
-                      value={phoneNumber}
-                      onChangeText={text=>setPhoneNumber(text)}
-                    />
-                    <TextInput
-                      placeholder="Any Special Requirements"
-                      style={[styles.input, { height: 100 },{ color: '#689A7C' }]}
-                      placeholderTextColor="#689A7C"
-                      multiline={true}
-                      value={specialRequirements}
-                      onChangeText={text=>setSpecialRequirements(text)}
-                    />
-                    <TouchableOpacity onPress={() => handleBooking(event)} style={styles.button}>
-                      <Text style={styles.buttonText}>Submit</Text>
-                    </TouchableOpacity>
-                  </View>
-
-
-                </View>
-              ))}  
+                      {/* Form for booking */}
+                        <View style={{ marginTop: 20 }}>
+                          <Text style={{ fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#689A7C', }}>Do you want to book? Please submit the infos and our representative will contact you. </Text>
+                          <TextInput
+                            placeholder="Number of Guests"
+                            style={[styles.input, { color: '#689A7C' }]}
+                            placeholderTextColor="#689A7C"
+                            value={numberOfGuests}
+                            onChangeText={text => setNumberOfGuests(text)}
+                          />
+                          <TextInput
+                            placeholder="Venue"
+                            style={[styles.input, { color: '#689A7C' }]}
+                            placeholderTextColor="#689A7C"
+                            value={venue}
+                            onChangeText={text=>setVenue(text)}
+                          />
+                          <TextInput
+                            placeholder="Time"
+                            style={[styles.input, { color: '#689A7C' }]}
+                            placeholderTextColor="#689A7C"
+                            value={time}
+                            onChangeText={text=>setTime(text)}
+                          />
+                          <TextInput
+                            placeholder="Date"
+                            style={[styles.input, { color: '#689A7C' }]}
+                            placeholderTextColor="#689A7C"
+                            value={date}
+                            onChangeText={text=>setDate(text)}
+                          />
+                          <TextInput
+                            placeholder="Phone Number"
+                            style={[styles.input, { color: '#689A7C' }]}
+                            placeholderTextColor="#689A7C"
+                            value={phoneNumber}
+                            onChangeText={text=>setPhoneNumber(text)}
+                          />
+                          <TextInput
+                            placeholder="Any Special Requirements"
+                            style={[styles.input, { height: 100 },{ color: '#689A7C' }]}
+                            placeholderTextColor="#689A7C"
+                            multiline={true}
+                            value={specialRequirements}
+                            onChangeText={text=>setSpecialRequirements(text)}
+                          />
+                          <TouchableOpacity onPress={() => handleBooking(event)} style={styles.button}>
+                            <Text style={styles.buttonText}>Submit</Text>
+                          </TouchableOpacity>
+                        </View>
+                        
+                    </View>
+                  ))}  
+              </View>
+            )}  
         </View>
       ) : (
         <View style={styles.loginContainer}>
