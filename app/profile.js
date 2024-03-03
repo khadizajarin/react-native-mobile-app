@@ -50,7 +50,7 @@ const Profile = () => {
               console.log('Document data:', doc.data());
               setUserData(doc.data());
               saveUserDataToStorage(doc.data());
-              console.log('UserData set after fetching:', userData);
+              // console.log('UserData set after fetching:', userData);
             });
           } else {
             console.log('No documents found for user with uid:', user.email);
@@ -74,7 +74,7 @@ const Profile = () => {
           fetchData(); 
         }
       } catch (error) {
-        console.error('Error retrieving user data from AsyncStorage:', error);
+        // console.error('Error retrieving user data from AsyncStorage:', error);
         fetchData(); 
       }
     };
@@ -90,7 +90,7 @@ const Profile = () => {
       // Remove AsyncStorage data
       await AsyncStorage.clear();
       navigation.navigate('home');
-      console.log('User logged out successfully!');
+      // console.log('User logged out successfully!');
     } catch (error) {
       console.error('Logout error:', error.message);
     }
@@ -99,7 +99,7 @@ const Profile = () => {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // allowsEditing: true,
+      allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
@@ -122,8 +122,8 @@ const Profile = () => {
                 phoneNumber: phoneNumber || userData.phoneNumber,
                 photoURL: photoURL || userData.photoURL
             };
-            console.log("Updating profile for user:", userData.email);
-            console.log("Updated document:", updatedDoc);
+            // console.log("Updating profile for user:", userData.email);
+            // console.log("Updated document:", updatedDoc);
 
             const userRef = doc(db, "users", user.uid); // Reference the document using user.uid
             const docSnapshot = await getDoc(userRef);
@@ -141,10 +141,10 @@ const Profile = () => {
                 
                 if (!updatedQuerySnapshot.empty) {
                     updatedQuerySnapshot.forEach(doc => {
-                        console.log('Document data:', doc.data());
+                        // console.log('Document data:', doc.data());
                         setUserData(doc.data());
                         saveUserDataToStorage(doc.data());
-                        console.log('UserData set after fetching:', userData);
+                        // console.log('UserData set after fetching:', userData);
                     });
                 } else {
                     console.log('No documents found for user with uid:', user.email);
@@ -163,17 +163,14 @@ const Profile = () => {
 
 const updateAsyncStorage = async (updatedData) => {
     try {
-        // Fetch existing user data from AsyncStorage
         const existingUserData = await AsyncStorage.getItem('userData');
         let userDataToUpdate = JSON.parse(existingUserData);
 
-        // Update user data with new values
         userDataToUpdate = {
             ...userDataToUpdate,
             ...updatedData
         };
 
-        // Store updated user data in AsyncStorage
         await AsyncStorage.setItem('userData', JSON.stringify(userDataToUpdate));
         console.log("AsyncStorage updated successfully!");
     } catch (error) {
