@@ -23,7 +23,7 @@ const Reviews = () => {
       const revData = [];
       servicesQuerySnapshot.forEach((doc) => {
         const reviewData = doc.data();
-        console.log("reviewdata eiguli", doc.id);
+        // console.log("reviewdata eiguli", doc.id);
         revData.push({ id: doc.id, ...reviewData });
       });
       setReviews(revData);
@@ -94,21 +94,21 @@ const Reviews = () => {
         ) : (
            <View style={styles.container} >
              <Text style={{ fontFamily: "serif", fontSize: 40, fontWeight: 'bold' }}>See What Our Clients Say!</Text>
-            <Text style={{ fontFamily: "serif", fontSize: 20, marginBottom: 8 }}>Want to be more confirmed about our services? Let's see what our customers' say about our services!So that we can assure you more!</Text>
-            {
+            <Text style={{ fontFamily: "serif", fontSize: 20, marginBottom: 8 }}>Want to be more confirmed about our services? Let's see what our customers' say about our services, so that we can assure you more!</Text>
+              {
                 reviews.map((review, index) => (
                     <View key={index}>
                         <View style={styles.contentContainer}>
                             <Text style={styles.title}>"{review.reviewtext}", </Text>
                             <Text>says {review.email}</Text>
 
-                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 5 }}>
-                                <TouchableOpacity style={[styles.button, { flex: 0.5 }]}>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 5, marginTop:10 }}>
+                                <TouchableOpacity style={[styles.button, { flex: 0.5 , padding: 8,}]}>
                                     <Text style={styles.buttonText}>{review.likes} <MaterialCommunityIcons name="cards-heart-outline" size={18} color="white" /></Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={[styles.button, { flex: 0.5 }]} onPress={() => toggleComments(index)} >
-                                    <Text style={styles.buttonText}>{review.commentsNo} <Fontisto name="comments" size={18} color="white" /> </Text>
+                                <TouchableOpacity style={[styles.button, { flex: 0.5, padding: 8, }]} onPress={() => toggleComments(index)} >
+                                    <Text style={styles.buttonText}>{review.comments.length} <Fontisto name="comments" size={18} color="white" /> </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -117,14 +117,14 @@ const Reviews = () => {
                             <View>
                                 {/* Display existing comments */}
                                 {review.comments && review.comments.map((comment, commentIndex) => (
-                                    <View key={commentIndex} style={{ marginLeft: 20 }}>
+                                    <View key={commentIndex} style={{ marginLeft: 20, marginTop: 10 }}>
                                       <Text>{comment.commentText}</Text>
-                                      <Text style={{ fontStyle: 'italic', color: 'gray' }}>By: {comment.email}</Text>
+                                      <Text style={{ fontStyle: 'italic', color: 'gray' }}>Commented by: {comment.email}</Text>
                                     </View>
                                   ))}
                                 {/* Input field for new comment */}
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                    <View style={{ flex: 0.7 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 5, alignItems: 'center', marginBottom: 10,marginTop:10 }}>
+                                    <View style={{ flex: 0.8 }}>
                                         <TextInput
                                             placeholder="Want to ask or tell something more?"
                                             value={newComment}
@@ -132,7 +132,7 @@ const Reviews = () => {
                                             style={styles.input} // Apply input styles here
                                         />
                                     </View>
-                                    <TouchableOpacity style={[styles.button, { flex: 0.3, padding:10 }]}>
+                                    <TouchableOpacity style={[styles.button, { flex: 0.2, padding: 15 }]}>
                                         <Text style={styles.buttonText}>Post</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -140,7 +140,7 @@ const Reviews = () => {
                         )}
                     </View>
                 ))
-            }
+              }
           </View>
         )}
         </View>
@@ -173,14 +173,14 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     alignItems:"center",
     backgroundColor: '#689A7C',
-    padding: 8,
+    // padding: 8,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 10,
+    // marginTop: 10,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    // fontSize: 16,
     fontWeight: 'bold',
   },
   input: {
@@ -189,6 +189,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
 });
