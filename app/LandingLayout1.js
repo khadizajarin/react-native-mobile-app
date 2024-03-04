@@ -5,6 +5,7 @@ import 'tailwindcss/tailwind.css';
 import useAuthentication from './Hooks/useAuthentication';
 import app from './Hooks/firebase.config';
 import { signOut } from '@firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LandingLayout1 = () => {
 

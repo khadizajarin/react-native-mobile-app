@@ -27,14 +27,6 @@ const Reviews = () => {
         revData.push({ id: doc.id, ...reviewData });
       });
       setReviews(revData);
-      //this is the comments
-      // const commentsRef = await getDocs(collection(db,`reviews/oDT7w2Bir6PiSZDamGu8/comments` ));
-      // const comData = [];
-      // commentsRef.forEach((doc) => {
-      //   const commentData = doc.data();
-      //   console.log("eiguli comments", doc.data());
-      //   comData.push({ id: doc.id, ...commentData});
-      // })
     } catch (error) {
       console.error('Error fetching services:', error);
     } finally {
@@ -42,7 +34,7 @@ const Reviews = () => {
     }
   };
 
-  //showing only the comments that are clickde
+  //showing only the comments that are clicked
   const toggleComments = (index) => {
     setShowComments(prevState => ({
       ...prevState,
@@ -131,15 +123,19 @@ const Reviews = () => {
                                     </View>
                                   ))}
                                 {/* Input field for new comment */}
-                                <TextInput
-                                    placeholder="Enter your comment..."
-                                    value={newComment}
-                                    onChangeText={text => setNewComment(text)}
-                                />
-                                {/* Button to post new comment */}
-                                <TouchableOpacity style={styles.button} onPress={() => handlePostComment(review, newComment)}>
-                                    <Text style={styles.buttonText}>Post</Text>
-                                </TouchableOpacity>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ flex: 0.7 }}>
+                                        <TextInput
+                                            placeholder="Want to ask or tell something more?"
+                                            value={newComment}
+                                            onChangeText={text => setNewComment(text)}
+                                            style={styles.input} // Apply input styles here
+                                        />
+                                    </View>
+                                    <TouchableOpacity style={[styles.button, { flex: 0.3, padding:10 }]}>
+                                        <Text style={styles.buttonText}>Post</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         )}
                     </View>
@@ -186,5 +182,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  input: {
+    color: '#689A7C',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
 });
