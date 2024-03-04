@@ -12,15 +12,29 @@ const Reviews = () => {
   const { user } = useAuthentication(app);
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true); 
-  
+  const [showComments, setShowComments] = useState({});
+  const [newComment, setNewComment] = useState('');
+
+  //fetch data from reviews database
   const fetchReviews = async () => {
     try {
+      //this is the reviews
       const servicesQuerySnapshot = await getDocs(collection(db, "reviews"));
       const revData = [];
       servicesQuerySnapshot.forEach((doc) => {
-        revData.push(doc.data());
+        const reviewData = doc.data();
+        console.log("reviewdata eiguli", doc.id);
+        revData.push({ id: doc.id, ...reviewData });
       });
       setReviews(revData);
+      //this is the comments
+      // const commentsRef = await getDocs(collection(db,`reviews/oDT7w2Bir6PiSZDamGu8/comments` ));
+      // const comData = [];
+      // commentsRef.forEach((doc) => {
+      //   const commentData = doc.data();
+      //   console.log("eiguli comments", doc.data());
+      //   comData.push({ id: doc.id, ...commentData});
+      // })
     } catch (error) {
       console.error('Error fetching services:', error);
     } finally {
@@ -28,37 +42,53 @@ const Reviews = () => {
     }
   };
 
-  const handleComment = async (reviewId, commentText, userEmail) => {
+  //showing only the comments that are clickde
+  const toggleComments = (index) => {
+    setShowComments(prevState => ({
+      ...prevState,
+      [index]: !prevState[index]
+    }));
+  };
+
+  const handleComment = async (reviewId, comments, userEmail) => {
     try {
-        const comments = {
-            text:commentText,
-            email: user.email
-        }
-        console.log(comments);
         const reviewDocRef = doc(db, "reviews", reviewId);
-        await updateDoc(reviewDocRef, comments);
-
-        fetchReviews();
-        } catch (error) {
-            console.error('Error adding comment:', error);
+        const reviewDocSnapshot = await getDoc(reviewDocRef); // Use getDoc instead of getDocs
+        
+        if (reviewDocSnapshot.exists()) {
+            const existingData = reviewDocSnapshot.data();
+            console.log('Existing data:', existingData); 
+            const updatedData = {
+                ...existingData,
+                comments: comments
+            };
+            console.log("this data is adding",updatedData);
+            await updateDoc(reviewDocRef, updatedData); // Update the document with the new data
+            fetchReviews(); 
+        } else {
+            console.log("Review document not found");
         }
+    } catch (error) {
+        console.error('Error adding comment:', error);
+    }
+};
+
+  const handlePostComment = (review, newComment) => {
+    const updatedReview = {
+        ...review,
+        comments: [
+            ...(review.comments || []),
+            { email: user.email, commentText: newComment }
+        ]
     };
-    const [showComments, setShowComments] = useState(false);
-    const [newComment, setNewComment] = useState('');
 
-    const toggleComments = () => {
-        setShowComments(!showComments);
-    };
+    handleComment(review.id, updatedReview.comments, user.email);
+    setNewComment('');
+};
 
-    const handlePostComment = () => {
-        // handleComment(review.id, newComment, user.email);
-        setNewComment('');
-    };
-
-
-    useEffect(() => {
-        fetchReviews();
-    }, []);
+  useEffect(() => {
+      fetchReviews();
+  }, []);
 
   return (
     <ScrollView>
@@ -70,51 +100,52 @@ const Reviews = () => {
         {isLoading ? (
         <ActivityIndicator size="large" color="#689A7C"  />
         ) : (
-        reviews.map((review, index) => (
-            <View style={styles.container} key={index}>
-            <Text style={{ fontFamily: "serif", fontSize: 40, fontWeight: 'bold' }}>See What Our Clients Say!</Text>
+           <View style={styles.container} >
+             <Text style={{ fontFamily: "serif", fontSize: 40, fontWeight: 'bold' }}>See What Our Clients Say!</Text>
             <Text style={{ fontFamily: "serif", fontSize: 20, marginBottom: 8 }}>Want to be more confirmed about our services? Let's see what our customers' say about our services!So that we can assure you more!</Text>
-            <View style={styles.contentContainer}>
-                <Text style={styles.title}>"{review.reviewtext}", </Text>
-                <Text>says {review.email}</Text>
+            {
+                reviews.map((review, index) => (
+                    <View key={index}>
+                        <View style={styles.contentContainer}>
+                            <Text style={styles.title}>"{review.reviewtext}", </Text>
+                            <Text>says {review.email}</Text>
 
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" , gap: 5}}>
-                    <TouchableOpacity style={[styles.button, { flex: 0.5 }]}>
-                        <Text style={styles.buttonText}>{review.likes} <MaterialCommunityIcons name="cards-heart-outline" size={18} color="white" /></Text>
-                    </TouchableOpacity>
+                            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 5 }}>
+                                <TouchableOpacity style={[styles.button, { flex: 0.5 }]}>
+                                    <Text style={styles.buttonText}>{review.likes} <MaterialCommunityIcons name="cards-heart-outline" size={18} color="white" /></Text>
+                                </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.button, { flex: 0.5 }]} onPress={toggleComments} >
-                        <Text style={styles.buttonText}>{review.comments} <Fontisto name="comments" size={18} color="white" /> </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-             {/* Display comments if showComments is true */}
-             {showComments && (
-                <View>
-                    {/* Map through existing comments and display them */}
-                    {/* {review.comments.map((comment, index) => (
-                        <View key={index}>
-                            <Text>{comment.text}</Text>
-                            <Text>{comment.email}</Text>
+                                <TouchableOpacity style={[styles.button, { flex: 0.5 }]} onPress={() => toggleComments(index)} >
+                                    <Text style={styles.buttonText}>{review.commentsNo} <Fontisto name="comments" size={18} color="white" /> </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    ))} */}
-
-                    {/* Input field for new comment */}
-                    <TextInput
-                        placeholder="Enter your comment..."
-                        value={newComment}
-                        onChangeText={text => setNewComment(text)}
-                    />
-
-                    {/* Button to post new comment */}
-                    <TouchableOpacity style={styles.button} onPress={handlePostComment}>
-                        <Text style={styles.buttonText}>Post</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-        </View>
-        
-        ))
+                        {/* Display comments if showComments[index] is true */}
+                        {showComments[index] && (
+                            <View>
+                                {/* Display existing comments */}
+                                {review.comments && review.comments.map((comment, commentIndex) => (
+                                    <View key={commentIndex} style={{ marginLeft: 20 }}>
+                                      <Text>{comment.commentText}</Text>
+                                      <Text style={{ fontStyle: 'italic', color: 'gray' }}>By: {comment.email}</Text>
+                                    </View>
+                                  ))}
+                                {/* Input field for new comment */}
+                                <TextInput
+                                    placeholder="Enter your comment..."
+                                    value={newComment}
+                                    onChangeText={text => setNewComment(text)}
+                                />
+                                {/* Button to post new comment */}
+                                <TouchableOpacity style={styles.button} onPress={() => handlePostComment(review, newComment)}>
+                                    <Text style={styles.buttonText}>Post</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </View>
+                ))
+            }
+          </View>
         )}
         </View>
 
