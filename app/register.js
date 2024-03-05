@@ -24,7 +24,8 @@ const Register = () => {
             email: user.email,
             displayName: '',
             phoneNumber: '',
-            photoURL: ''
+            photoURL: '',
+            role: 'user'
         };
         const usersCollectionRef = await setDoc(doc(db, 'users', user.uid), userData);
         navigation.navigate('home');
