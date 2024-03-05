@@ -6,6 +6,7 @@ import Navbar from './navbar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import useAuthentication from './Hooks/useAuthentication';
+import AddComment from './addComment';
 
 const Reviews = () => {
     const { user } = useAuthentication(app);
@@ -91,6 +92,8 @@ const Reviews = () => {
                <View style={styles.container} >
                 <Text style={{ fontFamily: "serif", fontSize: 40, fontWeight: 'bold' }}>See What Our Clients Say!</Text>
                 <Text style={{ fontFamily: "serif", fontSize: 20, marginBottom: 8 }}>Want to be more confirmed about our services? Let's see what our customers' say about our services, so that we can assure you more!</Text>
+                {/* this is for adding reviews */}
+                <AddComment></AddComment>
                   {
                     reviews.map((review, index) => (
                         <View key={index}>
