@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, TextInput, Modal, ActivityIndicator} from 'react-native';
-import Navbar from './navbar';
+import { Image, StyleSheet, Text, TouchableOpacity, View, TextInput, Modal, ActivityIndicator, ToastAndroid} from 'react-native';
+
 import useAuthentication from './Hooks/useAuthentication';
 import { signOut } from '@firebase/auth';
 import { useNavigation } from 'expo-router/build';
@@ -9,6 +9,7 @@ import { app, db } from "./Hooks/firebase.config";
 import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Navbar from './navbar';
 
 const getUserDataFromStorage = async () => {
   try {
@@ -50,7 +51,6 @@ const Profile = () => {
               console.log('Document data:', doc.data());
               setUserData(doc.data());
               saveUserDataToStorage(doc.data());
-              // console.log('UserData set after fetching:', userData);
             });
           } else {
             console.log('No documents found for user with uid:', user.email);
@@ -89,7 +89,8 @@ const Profile = () => {
       await signOut(auth);
       // Remove AsyncStorage data
       await AsyncStorage.clear();
-      navigation.navigate('home');
+      navigation.navigate('Home');
+      ToastAndroid.show('Logged out', ToastAndroid.SHORT);
       // console.log('User logged out successfully!');
     } catch (error) {
       console.error('Logout error:', error.message);
@@ -105,7 +106,7 @@ const Profile = () => {
     });
   
     if (!result.canceled) {
-      if (result.assets && result.assets.length > 0) {
+      if (result.assets ) {
         const imageUri = result.assets[0].uri;
         setPhotoURL(imageUri);
         console.log("phooturl : ", photoURL);
@@ -145,6 +146,7 @@ const Profile = () => {
                         setUserData(doc.data());
                         saveUserDataToStorage(doc.data());
                         // console.log('UserData set after fetching:', userData);
+                        ToastAndroid.show('Your profile is updated', ToastAndroid.SHORT);
                     });
                 } else {
                     console.log('No documents found for user with uid:', user.email);
@@ -183,7 +185,7 @@ const updateAsyncStorage = async (updatedData) => {
   return (
     <View >
       <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-        <Navbar />
+        
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#689A7C"  />
@@ -226,54 +228,63 @@ const updateAsyncStorage = async (updatedData) => {
       {userData && 
       <Modal visible={showUpdateForm} animationType="slide">
         <View style={styles.modalContainer}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>Update Profile</Text>
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              defaultValue={userData.email}
-              editable={false}
-            />
-          </View>
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Display Name"
-              // value={displayName}
-              defaultValue={userData.displayName}
-              onChangeText={text => setDisplayName(text)}
-            />
-          </View>
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Phone Number"
-              // value={phoneNumber}
-              defaultValue={userData.phoneNumber}
-              onChangeText={text => setPhoneNumber(text)}
-            />
-          </View>
-          <View style={styles.formControl}>
-              <Text style={styles.label}>Photo</Text>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10,color: '#3A3D42' }}>Update Profile</Text>
+
+          <View style={{width:"100%",borderColor:'gray',borderWidth:1, borderRadius:5, padding:20, marginBottom:10,color: '#3A3D42'}}>
+            <View style={styles.formControl}>
+              <Text style={styles.label}>Email</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Photo URL"
-                // value={photoURL}
-                defaultValue={userData.photoURL}
-                onChangeText={ text => setPhotoURL(text)}
+                defaultValue={userData.email}
+                editable={false}
               />
-              <TouchableOpacity style={styles.button} onPress={pickImage}>
-                <Text style={styles.buttonText}>Upload Photo</Text>
-              </TouchableOpacity>
+            </View>
+            <View style={styles.formControl}>
+              <Text style={styles.label}>Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Display Name"
+                // value={displayName}
+                defaultValue={userData.displayName}
+                onChangeText={text => setDisplayName(text)}
+              />
+            </View>
+            <View style={styles.formControl}>
+              <Text style={styles.label}>Phone Number</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Phone Number"
+                // value={phoneNumber}
+                defaultValue={userData.phoneNumber}
+                onChangeText={text => setPhoneNumber(text)}
+              />
+            </View>
+            <View style={styles.formControl}>
+                <Text style={styles.label}>Photo</Text>
+                <View style={{ display:'flex', flexDirection: 'row',gap:2, justifyContent: 'center', alignItems: 'center'}}>
+                  <View style={{ flex: 0.8 }}>
+                    <TextInput
+                      style={[styles.input,  { height: 60 }]} 
+                      placeholder="Photo URL"
+                      // value={photoURL}
+                      defaultValue={userData.photoURL}
+                      onChangeText={ text => setPhotoURL(text)}
+                    />
+                  </View>
+                  <TouchableOpacity style={[styles.button, { flex: 0.2,padding:10 }]} onPress={pickImage}>
+                    <Text style={styles.buttonText}>Change Photo</Text>
+                  </TouchableOpacity>
+                </View>
+            </View>
           </View>
-          <TouchableOpacity style={styles.button} onPress={()=> handleUpdateProfile( )}>
-            <Text style={styles.buttonText}>Update</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => setShowUpdateForm(false)}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
+          <View style={{display:'flex', flexDirection:'row', gap:2}}>
+            <TouchableOpacity style={[styles.button,{flex:0.5}]} onPress={()=> handleUpdateProfile( )}>
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button,{flex:0.5}]} onPress={() => setShowUpdateForm(false)}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>}
     </View>
@@ -285,21 +296,29 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    height: '100%',
+    height: '50%',
     // display: 'flex',
     backgroundColor: '#C3E2C2',
   },
   button: {
-    backgroundColor: '#689A7C',
+    // marginTop:10,
+    backgroundColor: '#3A3D42',
     padding: 15,
-    marginTop: 10,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#AB8C56',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  input: {
+    backgroundColor:'#F1F2F6',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
   },
   image: {
     width: 200,
@@ -315,21 +334,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     padding: 20,
     width: '100%',
-    marginBottom: 20,
   },
   formControl: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   label: {
     marginBottom: 5,
-    fontSize: 16,
-  },
-  input: {
-    width: 300,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
     fontSize: 16,
   },
 });

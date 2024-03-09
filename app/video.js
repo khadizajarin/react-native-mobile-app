@@ -20,10 +20,10 @@ const Video = () => {
 
 
   return (
-    <View>
-        <Text style={{fontFamily: "serif", fontSize: 20, fontWeight: 'bold', marginTop: 10, marginBottom: 10, color: '#689A7C', }}>Want to know more about Working Process of EvePlano? Watch this video to know how EvePlano contacts you and execute your event plans!</Text>
+    <View style={{}}>
+        <Text style={{fontFamily: "serif", fontSize: 16, fontWeight: 'bold', marginTop: 10, marginBottom: 10, paddingVertical:10, color: '#3A3D42',}}>Want to know more about Working Process of EvePlano? Watch this video to know how EvePlano contacts you and execute your event plans!</Text>
         <YouTubePlayer
-        style={{ borderRadius:5, marginTop: 10}}
+        style={{ borderRadius:20, marginTop: 5}}
         height={230}
         play= {playing}
         videoId={'I-XjdcpfXoI'}

@@ -1,57 +1,78 @@
-
-import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import {TailwindProvider} from 'tailwind-rn';
-import utilities from './../tailwind.json';
-import Home from './home';
-import Services from './services';
-import Details from './details';
-import Profile from './profile';
+import { NavigationContainer } from '@react-navigation/native';
+import Home from './Home';
+import Contact from './Contact';
+import Services from './Services';
+import useAuthentication from './Hooks/useAuthentication';
+import LocationScreen from './Location';
+import Profile from './Profile';
+import Reviews from './Reviews';
+import Details from './Details';
+import app from './Hooks/firebase.config';
 
 
+const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
+const ServicesStack = createStackNavigator();
 
+const ServicesStackScreen = () => (
+  <ServicesStack.Navigator>
+    <ServicesStack.Screen name="Services" component={Services}  options={{ headerShown: false }}/>
+    <ServicesStack.Screen name="Details" component={Details}  options={{ headerShown: true }}/>
+  </ServicesStack.Navigator>
+);
 
-
-
-const index = () => {
-    const Stack = createStackNavigator();
-    // console.log(AppProvider);
+const Layout = () => {
+    const { user, auth } = useAuthentication(app);
 
     return (
-        <TailwindProvider  utilities={utilities} >
-                <NavigationContainer independent={true}>
-                    <Stack.Navigator screenOptions={{ headerShown: false}}>
-                        <Stack.Screen name="home" component={Home} />
-                        <Stack.Screen name="services" component={Services} />
-                        <Stack.Screen name="details" component={Details} />
-                        {/* <Stack.Screen name="profile" component={Profile} /> */}
-                    </Stack.Navigator>  
-                </NavigationContainer>
-        </TailwindProvider>
+        <NavigationContainer independent={true} screenOptions={{ headerShown: false }}>
+            <Drawer.Navigator
+               screenOptions={{
+                drawerActiveTintColor:"#AB8C56",
+                drawerInactiveTintColor:"#AB8C56",
+                drawerLabelStyle: {
+                    fontWeight: 'bold',
+                    fontFamily: 'serif',
+                },
+                color: '#AB8C56',
+                drawerType: 'slide',
+                headerStyle: { backgroundColor: '#3A3D42', height: 80 },
+                headerTintColor: '#AB8C56',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontFamily: 'serif',
+                },
+                drawerStyle: {
+                    backgroundColor: '#3A3D42',
+                    width: 240,
+                    paddingTop: 50,
+                },
+            }}>
+                <Drawer.Screen name="Home" component={Home} />
+                <Drawer.Screen name="Services" component={ServicesStackScreen} />
+                <Drawer.Screen name="Contact" component={Contact} />
+                {user && (
+                    <>
+                        <Drawer.Screen name="Reviews" component={Reviews} />
+                        <Drawer.Screen name="Location" component={LocationScreen} />
+                        <Drawer.Screen name="Profile" component={Profile} />
+                    </>
+                )}
+            </Drawer.Navigator>
+        </NavigationContainer>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        fontFamily: "serif",
-        backgroundColor: '#C3E2C2' ,
-        // flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 50
-    },
-    link: {
-        fontFamily: "serif",
-        fontWeight: "bold",
-        fontSize: 16,
-        color: '#000',
-    },
-});
+const Index = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Layout" component={Layout}  options={{ headerShown: false }} />
+        </Stack.Navigator>
+    );
+};
 
-
-
-export default index
-
+export default Index;

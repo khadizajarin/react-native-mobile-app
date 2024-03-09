@@ -5,9 +5,7 @@ import Navbar from './navbar'
 const Contact = () => {
   return (
     <View>
-      <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-            <Navbar></Navbar>
-        </View>
+      
       <Text>Contact</Text>
     </View>
   )

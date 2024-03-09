@@ -1,6 +1,6 @@
 import { useNavigation } from 'expo-router';
 import React from 'react';
-import { View, Text, Image, ScrollView,ImageBackground, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView,ImageBackground, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
 import 'tailwindcss/tailwind.css'; 
 import useAuthentication from './Hooks/useAuthentication';
 import app from './Hooks/firebase.config';
@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LandingLayout1 = () => {
 
-  const { user,auth } = useAuthentication(app);
+  const { user, auth } = useAuthentication(app);
   const navigation = useNavigation();
 
   const handleLogOut = async () => {
@@ -18,8 +18,9 @@ const LandingLayout1 = () => {
         await signOut(auth);
          // Remove AsyncStorage data
         await AsyncStorage.clear();
-        navigation.navigate('home');
+        navigation.navigate('Home');
         console.log('User logged out successfully!');
+        ToastAndroid.show('Logged out', ToastAndroid.SHORT);
       } catch (error) {
         console.error('Logout error:', error.message);
       }
@@ -29,21 +30,22 @@ const LandingLayout1 = () => {
 
   return (
     <ScrollView >
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#F1F2F6", borderBottomWidth: 1, 
+    borderBottomColor: '#AB8C56',}}>
         {user ? (
           <View  style={{ padding: 10}}>
-            <Text style={{fontFamily: "serif", fontSize: 31, fontWeight: 'bold', color: '#689A7C', marginBottom: 10}}>
+            <Text style={{fontFamily: "serif", fontSize: 31, fontWeight: 'bold', color: '#3A3D42', marginBottom: 10}}>
               Welcome to EvePlano, {user.email ? user.email.split('@')[0] : user.displayName}!
             </Text>
-            <Text style={{fontFamily: "serif",fontSize: 18, color: '#689A7C'}}>EvePlano is your one-stop platform for planning and managing social events with ease. Whether you are organizing a birthday party, wedding, corporate gathering, or any other social occasion, EvePlano simplifies the entire process.</Text>
+            <Text style={{fontFamily: "serif",fontSize: 18, color: '#3A3D42'}}>EvePlano is your one-stop platform for planning and managing social events with ease. Whether you are organizing a birthday party, wedding, corporate gathering, or any other social occasion, EvePlano simplifies the entire process.</Text>
             <TouchableOpacity style={styles.button} onPress={handleLogOut}>
                     <Text style={styles.buttonText}>Logout</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={{ padding: 10}}  >
-            <Text style={{fontFamily: "serif",fontSize: 31, fontWeight: 'bold', color: '#689A7C', marginBottom: 10}}>Welcome to EvePlano !</Text>
-            <Text style={{fontFamily: "serif",fontSize: 18, color: '#689A7C'}}>EvePlano is your one-stop platform for planning and managing social events with ease. Whether you are organizing a birthday party, wedding, corporate gathering, or any other social occasion, EvePlano simplifies the entire process.</Text>
+            <Text style={{fontFamily: "serif",fontSize: 31, fontWeight: 'bold', color: '#3A3D42', marginBottom: 10}}>Welcome to EvePlano !</Text>
+            <Text style={{fontFamily: "serif",fontSize: 18, color: '#3A3D42'}}>EvePlano is your one-stop platform for planning and managing social events with ease. Whether you are organizing a birthday party, wedding, corporate gathering, or any other social occasion, EvePlano simplifies the entire process.</Text>
             
           </View>
         )}  
@@ -64,13 +66,13 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
     marginBottom: 10,
-    backgroundColor: '#689A7C',
+    backgroundColor: '#3A3D42',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#AB8C56',
     fontSize: 16,
     fontWeight: 'bold',
   },

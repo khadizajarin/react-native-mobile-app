@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet,Alert, ToastAndroid } from 'react-native';
 import { initializeApp } from '@firebase/app';
 import {app, db, collection, addDoc} from './Hooks/firebase.config';
 import { getAuth, createUserWithEmailAndPassword, signOut } from '@firebase/auth';
@@ -15,44 +15,39 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+
   const handleRegistration = async () => {
-    try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        console.log('User registered successfully!');
-        const user = auth.currentUser;
-        const userData = {
-            email: user.email,
-            displayName: '',
-            phoneNumber: '',
-            photoURL: '',
-            role: 'user'
-        };
-        const usersCollectionRef = await setDoc(doc(db, 'users', user.uid), userData);
-        navigation.navigate('home');
-    } catch (error) {
-        console.error('Registration error:', error.message);
+      try {
+          await createUserWithEmailAndPassword(auth, email, password);
+          console.log('User registered successfully!');
+          const user = auth.currentUser;
+          const userData = {
+              email: user.email,
+              displayName: '',
+              phoneNumber: '',
+              photoURL: '',
+              role: 'user'
+          };
+          await setDoc(doc(db, 'users', user.uid), userData); 
+          ToastAndroid.show('Registered successfully', ToastAndroid.SHORT);
+          navigation.navigate('Home');
+      } catch (error) {
+          console.error('Registration error:', error.message);
+          Alert.alert(
+              'Registration Failed',
+              error.message,
+              [{ text: 'OK' }],
+              { cancelable: false }
+          );
     }
-};
-
-
-  const goToLogin = () => {
-    // Navigate to login screen
   };
+
+
 
   return (
     <View style={styles.container}>
         <Text style={styles.heroTitle}>Join Us Today!</Text>
-        {/* <Text> {user.email}</Text> */}
         <View style={styles.formContainer}>
-          {/* name */}
-            {/* <View style={styles.formControl}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Name"
-                onChangeText={(text) => setName(text)}
-            />
-            </View> */}
             {/* Email */}
             <View style={styles.formControl}>
             <Text style={styles.label}>Email</Text>
@@ -74,16 +69,6 @@ const Register = () => {
                 onChangeText={(text) => setPassword(text)}
             />
             </View>
-            {/* Phone NUmber */}
-            {/* <View style={styles.formControl}>
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
-                onChangeText={(text) => setPhoneNumber(text)}
-            />
-            </View> */}
             <TouchableOpacity style={styles.button} onPress={handleRegistration}>
             <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
@@ -104,7 +89,7 @@ const Register = () => {
 const styles = StyleSheet.create({
   container: {
     fontFamily: "serif",
-    backgroundColor: '#E6F6E6',
+    backgroundColor: '#F1F2F6',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -123,19 +108,19 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'gray',
     borderRadius: 5,
     padding: 10,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#689A7C',
+    backgroundColor: '#3A3D42',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#AB8C56',
     fontSize: 16,
     fontWeight: 'bold',
   },

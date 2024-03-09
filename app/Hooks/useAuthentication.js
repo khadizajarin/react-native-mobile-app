@@ -11,7 +11,7 @@ const useAuthentication = (app) => {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, [app]);
 
   return { user, auth };
 };

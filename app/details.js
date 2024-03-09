@@ -2,7 +2,6 @@ import { Image, ScrollView, StyleSheet, Text, View,  Button, TouchableOpacity, T
 import React, { useContext, useEffect, useState } from 'react'
 // import Events from './../assets/data';
 import { useRoute } from '@react-navigation/native';
-import Navbar from './navbar';
 import useAuthentication from './Hooks/useAuthentication';
 import { app, db,  addDoc } from "./Hooks/firebase.config"
 import { useNavigation } from 'expo-router';
@@ -10,17 +9,14 @@ import Video from './video';
 import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
 
 
-
-
 const Details = () => {
   
-  const { user } = useAuthentication(app);
+  const { user, auth } = useAuthentication(app);
   const route = useRoute(); 
   const navigation = useNavigation();
   const { serviceId } = route.params || {};
-  // console.log("serviceId", serviceId);
-
-
+  console.log("serviceId in Details page", serviceId);
+  
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Initialize isLoading state to true
   const fetchServices = async () => {
@@ -49,7 +45,6 @@ const Details = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [specialRequirements, setSpecialRequirements] = useState('');
   
-
   const handleBooking = async (event) => {
     try {
       const eventData = {
@@ -79,73 +74,68 @@ const Details = () => {
       console.error('Error adding document: ', e);
     }
   };
-  
  
-
   return (
     <ScrollView style={styles. wholeContain}>
       {user ? (
         <View>
-           <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-              <Navbar></Navbar>
-          </View>
               {isLoading ? (
-              <ActivityIndicator size="large" color="#689A7C"  />
+              <ActivityIndicator size="large" color="#3A3D42"  />
               ) : ( 
               <View>
                   {events.filter((event) => (event.id === serviceId)).map((event, id) => (
-                    <View key={id} style={{ margin: 10 }}>
-                      <Image source={{ uri: event.image }} style={{  borderRadius: 10, height: 200, margin: 10 }} />
-                      <Text style={{fontFamily: "serif", fontSize: 20, fontWeight: 'bold', marginTop: 4, color: '#689A7C', }}>{event.name}</Text>
-                      <Text style={{fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginTop: 4, color: '#689A7C', }}>Approximate Cost: {event.price} (For 50 Guests)</Text>
-                      <Text style={{fontFamily: "serif", fontSize: 16, marginBottom: 15, color: '#689A7C', }}>{event.description}</Text>  
+                    <View key={id} style={{ paddingTop: 10 }}>
+                      <Image source={{ uri: event.image }} style={{  borderRadius: 10, height: 200,  }} />
+                      <Text style={{fontFamily: "serif", fontSize: 20, fontWeight: 'bold', marginTop: 4, color: '#3A3D42' }}>{event.name}</Text>
+                      <Text style={{fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginTop: 4, color: '#3A3D42' }}>Approximate Cost: {event.price} (For 50 Guests)</Text>
+                      <Text style={{fontFamily: "serif", fontSize: 16, marginBottom: 15, color: '#3A3D42' }}>{event.description}</Text>  
 
-                      <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray', borderTopWidth: 1, borderTopColor:'gray'}}>
+                      <View style={{ borderTopWidth: 1, borderTopColor: '#AB8C56', borderBottomWidth: 1, borderBottomColor: '#AB8C56'}}>
                         <Video></Video>
                       </View>
 
                       {/* Form for booking */}
                         <View style={{ marginTop: 20 }}>
-                          <Text style={{ fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#689A7C', }}>Do you want to book? Please submit the infos and our representative will contact you. </Text>
+                          <Text style={{ fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#3A3D42' }}>Do you want to book? Please submit the infos and our representative will contact you. </Text>
                           <TextInput
                             placeholder="Number of Guests"
-                            style={[styles.input, { color: '#689A7C' }]}
-                            placeholderTextColor="#689A7C"
+                            style={[styles.input, { color: '#3A3D42' }]}
+                            // placeholderTextColor="#3A3D42"
                             value={numberOfGuests}
                             onChangeText={text => setNumberOfGuests(text)}
                           />
                           <TextInput
                             placeholder="Venue"
-                            style={[styles.input, { color: '#689A7C' }]}
-                            placeholderTextColor="#689A7C"
+                            style={[styles.input, { color: '#3A3D42' }]}
+                            // placeholderTextColor="#3A3D42"
                             value={venue}
                             onChangeText={text=>setVenue(text)}
                           />
                           <TextInput
                             placeholder="Time"
-                            style={[styles.input, { color: '#689A7C' }]}
-                            placeholderTextColor="#689A7C"
+                            style={[styles.input, { color: '#3A3D42' }]}
+                            // placeholderTextColor="#3A3D42"
                             value={time}
                             onChangeText={text=>setTime(text)}
                           />
                           <TextInput
                             placeholder="Date"
-                            style={[styles.input, { color: '#689A7C' }]}
-                            placeholderTextColor="#689A7C"
+                            style={[styles.input, { color: '#3A3D42' }]}
+                            // placeholderTextColor="#3A3D42"
                             value={date}
                             onChangeText={text=>setDate(text)}
                           />
                           <TextInput
                             placeholder="Phone Number"
-                            style={[styles.input, { color: '#689A7C' }]}
-                            placeholderTextColor="#689A7C"
+                            style={[styles.input, { color: '#3A3D42' }]}
+                            // placeholderTextColor="#3A3D42"
                             value={phoneNumber}
                             onChangeText={text=>setPhoneNumber(text)}
                           />
                           <TextInput
                             placeholder="Any Special Requirements"
-                            style={[styles.input, { height: 100 },{ color: '#689A7C' }]}
-                            placeholderTextColor="#689A7C"
+                            style={[styles.input, { height: 100 },{ color: '#3A3D42' }]}
+                            // placeholderTextColor="#3A3D42"
                             multiline={true}
                             value={specialRequirements}
                             onChangeText={text=>setSpecialRequirements(text)}
@@ -163,7 +153,7 @@ const Details = () => {
       ) : (
         <View style={styles.loginContainer}>
           <Text>Please login to access details.</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('login')} style={styles.button} >
+          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.button} >
             <Text style={styles.buttonText}>Go to Login</Text>
           </TouchableOpacity>
         </View>
@@ -178,18 +168,18 @@ export default Details
 
 const styles = StyleSheet.create({
   wholeContain: {
-    fontFamily: "serif"
+    fontFamily: "serif",
+    paddingHorizontal:15
   },
-
   input: {
-    color: '#689A7C',
+    marginBottom:10,
+    backgroundColor:'#F1F2F6',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'gray',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10,
+    fontSize: 16,
   },
-
   loginContainer: {
     height: 500,
     flex: 1,
@@ -199,13 +189,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: '#689A7C',
+    marginTop:10,
+    backgroundColor: '#3A3D42',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#AB8C56',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import * as Location from 'expo-location';
 import Navbar from './navbar';
 
+
 const LocationScreen = () => {
     const [map, setMap] = useState({
         latitude: 37.78825,
@@ -44,10 +45,10 @@ const LocationScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-                <Navbar></Navbar>
+            <View style={{ borderBottomWidth: 1, borderBottomColor: '#AB8C56' }}>
+                
             </View>
-            <Text style={{ fontFamily: "serif", fontSize: 18, fontWeight: 'bold', marginTop: 10, paddingLeft:10, paddingBottom:10, color: '#689A7C', borderBottomWidth: 1, borderBottomColor: 'gray'}}>Let's see where we are located!</Text>
+            <Text style={{ fontFamily: "serif", fontSize: 40, fontWeight: 'bold',  padding:10, paddingBottom:10, color: '#3A3D42', borderBottomWidth: 1, borderBottomColor: '#AB8C56'}}>Let's see where we are located!</Text>
             <MapView
                 ref={mapViewRef}
                 style={styles.map}
@@ -66,7 +67,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     map: {
-        
         width: '100%',
         height: '100%',
     },

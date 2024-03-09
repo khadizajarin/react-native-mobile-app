@@ -1,6 +1,6 @@
 import { Link, useNavigation } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet,  Alert, ToastAndroid } from 'react-native';
 import { app, db, collection, addDoc} from './Hooks/firebase.config';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,  } from '@firebase/auth';
 import useAuthentication from './Hooks/useAuthentication';
@@ -17,17 +17,20 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log('User signed in successfully!');
-      navigation.navigate('home')
+      // console.log('User signed in successfully!');
+      ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT);
+      navigation.navigate('Home')
     } catch (error) {
       console.error('Login error:', error.message);
+      Alert.alert(
+        'Login Failed',
+        error.message,
+        [{ text: 'OK' }],
+        { cancelable: false }
+    );
     }
   };
 
-
-  const goToRegister = () => {
-    // Navigate to register screen
-  };
 
   return (
     <View style={styles.container}>
@@ -52,9 +55,6 @@ const Login = () => {
                 secureTextEntry={true}
                 onChangeText={(text) => setPassword(text)}
             />
-            <TouchableOpacity>
-                <Text style={styles.forgotPassword}>Forgot password?</Text>
-            </TouchableOpacity>
             </View>
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Login</Text>
@@ -65,9 +65,8 @@ const Login = () => {
             <View style={styles.heroContent}>
             <Text style={styles.heroDescription}>Effortlessly log in to know more about our exclusive social event management package.</Text>
             <TouchableOpacity style={styles.button} >
-               <Link href="/register" style={[styles.heroDescription, styles.registerLink]}>
-                <Text style={styles.buttonText}>Do not have an account yet? </Text> 
-                <Text style={styles.buttonText} >Please proceed to Register</Text>   
+                <Link href="/register" style={[styles.heroDescription, styles.registerLink, {paddingHorizontal:60}]}>
+                <Text style={styles.buttonText}>Do not have an account yet? Please proceed to Register</Text>   
             </Link>
             </TouchableOpacity>
            
@@ -79,8 +78,11 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   container: {
+    borderTopWidth: 1, 
+    borderTopColor: '#AB8C56',
     fontFamily: "serif",
-    backgroundColor: '#E6F6E6',
+    backgroundColor: '#F1F2F6',
+    color: '#3A3D42',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -98,8 +100,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   input: {
+    backgroundColor:'#F1F2F6',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'gray',
     borderRadius: 5,
     padding: 10,
     fontSize: 16,
@@ -109,14 +112,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    // color: 'white',
-    backgroundColor: '#689A7C',
+    backgroundColor: '#3A3D42',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#AB8C56',
     fontSize: 16,
     fontWeight: 'bold',
   },
