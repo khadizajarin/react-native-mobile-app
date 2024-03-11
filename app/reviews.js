@@ -7,7 +7,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import useAuthentication from './Hooks/useAuthentication';
 import AddReview from './addReview';
-import Navbar from './navbar';
 
 const Reviews = () => {
     const { user, auth } = useAuthentication(app);
@@ -184,3 +183,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+

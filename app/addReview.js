@@ -9,15 +9,15 @@ import useAuthentication from './Hooks/useAuthentication';
 const AddReview = () => {
 
     const { user, auth } = useAuthentication(app);
-    const [reviewText, setReviewText] = useState(''); // Changed variable name to avoid conflict
+    const [reviewText, setReviewText] = useState(''); 
 
     const handleAddReviews = async() => {
         try {
-            const newReview = { // Renamed variable to newReview
+            const newReview = { 
               comments: [],
               email: user.email,
               isLikedByMe: '',
-              reviewtext: reviewText, // Changed to reviewText
+              reviewtext: reviewText, 
               likes: ''
             };
 
@@ -32,7 +32,7 @@ const AddReview = () => {
 
     return (
         <View style={{ marginTop: 10 }}>
-            <Text style={{ fontFamily: "serif", fontSize: 15, color: '' }}>Feel free to give any suggestions or complaints! We will heartily try to solve it!</Text>
+            <Text style={{ fontFamily: "serif", fontSize: 15 }}>Feel free to give any suggestions or complaints! We will heartily try to solve it!</Text>
             <View style={{ height:100, display:'flex', flexDirection: 'row', justifyContent: 'center', gap:2 , alignItems: 'center', marginBottom: 10, }}>
               <View style={{ flex: 0.8 }}>
                 <TextInput

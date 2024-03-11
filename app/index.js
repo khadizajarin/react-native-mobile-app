@@ -8,7 +8,7 @@ import Services from './Services';
 import useAuthentication from './Hooks/useAuthentication';
 import LocationScreen from './Location';
 import Profile from './Profile';
-import Reviews from './Reviews';
+import Reviews from './reviews';
 import Details from './Details';
 import app from './Hooks/firebase.config';
 
