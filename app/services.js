@@ -1,7 +1,6 @@
 import { Image, ScrollView, StyleSheet, Text, View,  Button, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Events from '../assets/data';
-import Navbar from './navbar'
 import Service from './service';
 import { app, db } from "./Hooks/firebase.config";
 import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';

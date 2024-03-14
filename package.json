@@ -42,7 +42,8 @@
     "react-native-webview": "^13.8.1",
     "react-native-youtube": "^2.0.2",
     "react-native-youtube-iframe": "^2.3.0",
-    "tailwind-rn": "^4.2.0"
+    "tailwind-rn": "^4.2.0",
+    "@react-native-community/datetimepicker": "7.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

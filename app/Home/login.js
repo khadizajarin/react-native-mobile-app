@@ -1,9 +1,9 @@
 import { Link, useNavigation } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet,  Alert, ToastAndroid } from 'react-native';
-import { app, db, collection, addDoc} from './Hooks/firebase.config';
+import { app, db, collection, addDoc} from '../Hooks/firebase.config';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,  } from '@firebase/auth';
-import useAuthentication from './Hooks/useAuthentication';
+import useAuthentication from '../Hooks/useAuthentication';
 
 
 const Login = () => {

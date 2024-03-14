@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import LandingLayout1 from './LandingLayout1';
-import Upcomings from './upcomings';
-import useAuthentication from './Hooks/useAuthentication';
-import app from './Hooks/firebase.config';
+import Upcomings from '../upcomings';
+import useAuthentication from '../Hooks/useAuthentication';
+import app from '../Hooks/firebase.config';
 import Login from './login';
 
 const Home = () => {

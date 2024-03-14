@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Dimensions, Button } from 'react-native'
 import MapView, { Marker } from 'react-native-maps';
 import React, { useEffect, useState } from 'react'
 import * as Location from 'expo-location';
-import Navbar from './navbar';
+
 
 
 const LocationScreen = () => {

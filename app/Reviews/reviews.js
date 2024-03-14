@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView, TextInput, ToastAndroid } from 'react-native';
-import { app, db } from "./Hooks/firebase.config";
+import { app, db } from "../Hooks/firebase.config";
 import { collection, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
-import useAuthentication from './Hooks/useAuthentication';
+import useAuthentication from '../Hooks/useAuthentication';
 import AddReview from './addReview';
 
 const Reviews = () => {

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View, TextInput, Modal, ActivityIndicator, ToastAndroid} from 'react-native';
 
-import useAuthentication from './Hooks/useAuthentication';
+import useAuthentication from '../Hooks/useAuthentication';
 import { signOut } from '@firebase/auth';
 import { useNavigation } from 'expo-router/build';
 import * as ImagePicker from 'expo-image-picker';
-import { app, db } from "./Hooks/firebase.config";
+import { app, db } from "../Hooks/firebase.config";
 import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Navbar from './navbar';
+import Bookings from './Bookings';
+
+
 
 const getUserDataFromStorage = async () => {
   try {
@@ -184,15 +186,13 @@ const updateAsyncStorage = async (updatedData) => {
 
   return (
     <View >
-      <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray' }}>
-        
-      </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#689A7C"  />
       ) : (
         <View style= {styles.container} >
           <View>
           <View style={styles.image}>
+            
             {userData ? (
               <Image source={{ uri: userData.photoURL }} style={{ width: 180, height: 180, borderRadius: 90 }} />
               ) : (
@@ -213,15 +213,21 @@ const updateAsyncStorage = async (updatedData) => {
                 userData ? ( <Text style={{ fontFamily: 'serif', fontSize: 16, fontWeight: 'bold', marginTop: 10 }}>Phone Number : {userData.phoneNumber}</Text>) : 
                 (<Text style={{ fontFamily: 'serif', fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>Phone Number : </Text>)
               }
-              
+            
+            <View style={{ marginVertical:10, width:'auto',display:'flex', flexDirection:'row', gap:2}}>
+              <TouchableOpacity style={styles.button} onPress={() => setShowUpdateForm(true)}>
+                <Text style={styles.buttonText}>Update Profile</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => setShowUpdateForm(true)}>
-              <Text style={styles.buttonText}>Update Profile</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleLogOut}>
+                <Text style={styles.buttonText}>LogOut</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleLogOut}>
-              <Text style={styles.buttonText}>LogOut</Text>
-            </TouchableOpacity>
+              {/* user will see their bookings */}
+          <View>
+            <Bookings></Bookings>
           </View>
         </View>
       )}
@@ -298,7 +304,7 @@ const styles = StyleSheet.create({
     padding: 20,
     height: '50%',
     // display: 'flex',
-    backgroundColor: '#C3E2C2',
+    backgroundColor: '#F1F2F6',
   },
   button: {
     // marginTop:10,

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
-import { app, db,  addDoc } from "./Hooks/firebase.config"
+import { app, db,  addDoc } from "../Hooks/firebase.config"
 import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
-import useAuthentication from './Hooks/useAuthentication';
+import useAuthentication from '../Hooks/useAuthentication';
 
 
 

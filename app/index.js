@@ -2,15 +2,24 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from './Home';
+import Home from './Home/Home';
 import Contact from './Contact';
 import Services from './Services';
 import useAuthentication from './Hooks/useAuthentication';
-import LocationScreen from './Location';
-import Profile from './Profile';
-import Reviews from './reviews';
+import Reviews from './Reviews/reviews';
 import Details from './Details';
 import app from './Hooks/firebase.config';
+import Profile from './Profile/Profile';
+
+import LocationScreen from './Location';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+
+
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
 
 
 const Drawer = createDrawerNavigator();

@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet, Text, View,  Button, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View,  Button, TouchableOpacity, TextInput, ActivityIndicator, Pressable, Platform } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 // import Events from './../assets/data';
 import { useRoute } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { app, db,  addDoc } from "./Hooks/firebase.config"
 import { useNavigation } from 'expo-router';
 import Video from './video';
 import { collection, query, where, updateDoc, doc, getDocs, getDoc } from 'firebase/firestore';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 
 const Details = () => {
@@ -41,9 +42,26 @@ const Details = () => {
   const [numberOfGuests, setNumberOfGuests] = useState('');
   const [venue, setVenue] = useState('');
   const [time, setTime] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date());
   const [phoneNumber, setPhoneNumber] = useState('');
   const [specialRequirements, setSpecialRequirements] = useState('');
+
+  const [showPicker, setShowPicker] = useState(false);
+  const toggleDatePicker= ()=>{
+    setShowPicker(!showPicker);
+  }
+  const onChange =({type}, selectedDate) => {
+    if(type == 'set'){
+      const currentDate = selectedDate;
+      setDate(currentDate);
+      if (Platform.OS === "android"){
+        toggleDatePicker();
+        setDate(currentDate.toDateString());
+      }
+    } else {
+      toggleDatePicker();
+    }
+  }
   
   const handleBooking = async (event) => {
     try {
@@ -118,13 +136,19 @@ const Details = () => {
                             value={time}
                             onChangeText={text=>setTime(text)}
                           />
-                          <TextInput
-                            placeholder="Date"
-                            style={[styles.input, { color: '#3A3D42' }]}
-                            // placeholderTextColor="#3A3D42"
-                            value={date}
-                            onChangeText={text=>setDate(text)}
-                          />
+                          {showPicker && (<DateTimePicker mode='date' display='spinner' value={date} onChange={onChange}/>)}
+                          {!showPicker && (
+                            <Pressable onPress={toggleDatePicker}>
+                            <TextInput
+                              placeholder="Date"
+                              style={[styles.input, { color: '#3A3D42' }]}
+                              // placeholderTextColor="#3A3D42"
+                              value={date}
+                              onChangeText={text=>setDate(text)}
+                              editable={false}
+                            />
+                          </Pressable>
+                          )}
                           <TextInput
                             placeholder="Phone Number"
                             style={[styles.input, { color: '#3A3D42' }]}
