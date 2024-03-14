@@ -17,8 +17,7 @@ const AddReview = () => {
               comments: [],
               email: user.email,
               isLikedByMe: '',
-              reviewtext: reviewText, 
-              likes: ''
+              reviewtext: reviewText
             };
 
             const docRef = await addDoc(collection(db, 'reviews'), newReview);

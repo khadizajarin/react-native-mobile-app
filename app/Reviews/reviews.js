@@ -74,8 +74,40 @@ const Reviews = () => {
             ...prevState,
             [index]: '', // Clear the input field after posting comment
         }));
+        fetchReviews(); 
     };
 
+    const handleLike = async (review) => {
+        try {
+            const reviewDocRef = doc(db, "reviews", review.id);
+            const reviewDocSnapshot = await getDoc(reviewDocRef);
+            
+            if (reviewDocSnapshot.exists()) {
+                const existingData = reviewDocSnapshot.data();
+                const likedEmail = existingData.likedEmail || [];
+                
+                if (!likedEmail.includes(user.email)) {
+                    const updatedLikedEmail = [...likedEmail, user.email];
+                    const updatedData = {
+                        ...existingData,
+                        likedEmail: updatedLikedEmail
+                    };
+        
+                    await updateDoc(reviewDocRef, updatedData);
+                    fetchReviews(); 
+                    ToastAndroid.show('You liked this review', ToastAndroid.SHORT);
+                } else {
+                    ToastAndroid.show('You have already liked this review', ToastAndroid.SHORT);
+                }
+            } else {
+                console.log("Review document not found");
+            }
+        } catch (error) {
+            console.error('Error liking review:', error);
+        }
+    };
+    
+    
     useEffect(() => {
         fetchReviews();
     }, []);
@@ -102,8 +134,15 @@ const Reviews = () => {
                                 <Text>says {review.email}</Text>
 
                                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 5, marginTop:10 }}>
-                                    <TouchableOpacity style={[styles.button, { flex: 0.5 , padding: 8,}]}>
-                                        <Text style={styles.buttonText}>{review.likes} <MaterialCommunityIcons name="cards-heart-outline" size={18} color="#AB8C56" /></Text>
+                                    <TouchableOpacity style={[styles.button, { flex: 0.5 , padding: 8,}]} onPress={() => handleLike(review)} >
+                                    <Text style={styles.buttonText}>
+                                    {review.likedEmail && review.likedEmail.includes(user.email) ? review.likedEmail.length : ''}
+                                        <MaterialCommunityIcons 
+                                            name={review.likedEmail && review.likedEmail.includes(user.email) ? "cards-heart" : "cards-heart-outline"} 
+                                            size={18} 
+                                            color={review.likedEmail && review.likedEmail.includes(user.email) ? "#AB8C56" : "#AB8C56"} 
+                                        />
+                                    </Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity style={[styles.button, { flex: 0.5, padding: 8, }]} onPress={() => toggleComments(index)} >
