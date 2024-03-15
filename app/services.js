@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import Service from './service';
 import { db } from "./Hooks/firebase.config";
 import { collection, query, orderBy, limit, getDocs, startAfter } from 'firebase/firestore';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import {gsap, Back} from 'gsap-rn';
 
 const PAGE_SIZE = 5; // Number of items to fetch per page
 
@@ -11,7 +13,8 @@ const Services = () => {
   const [isLoading, setIsLoading] = useState(true); 
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true); // to track if there are more documents to load
-
+  gsap.to(this.ref, {duration:3, style:{right:0, left:50}, transform:{rotate:0,scale:1}, 	ease:Back.easeInOut});
+  
   const fetchServices = async () => {
     try {
       let servicesQuery = query(
@@ -54,11 +57,6 @@ const Services = () => {
     fetchServices();
   }, [currentPage]); // Fetch data when currentPage changes
 
-  useEffect(() => {
-    // Fetch initial data when the component mounts
-    fetchServices();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
-
   const loadMore = () => {
     setCurrentPage(currentPage + 1); // Increment page to load next page
   };
@@ -69,7 +67,7 @@ const Services = () => {
         <ActivityIndicator size="large" color="#AB8C56" />
       ) : (
         <View style={{backgroundColor: "#ffffff", padding: 20 }}>
-          <Text style={{fontFamily: "serif", fontSize: 40, fontWeight: 'bold',color: '#3A3D42', }}>Explore Our Events!</Text>
+          <Text  ref={ref=> this.ref = ref} style={{fontFamily: "serif", fontSize: 40, fontWeight: 'bold',color: '#3A3D42', }}>Explore Our Events!</Text>
           <Text style={{fontFamily: "serif", fontSize: 20, marginBottom: 8, color: '#3A3D42' }}>Explore a variety of event management sectors to find your perfect fit. From weddings radiating eternal love to lively birthday bashes and corporate excellence summits, we have it all. Dive into DIY workshops and unleash your creativity. Discover unforgettable experiences with us today.</Text>
           {events.map((event, id) => (
             <View key={id} style={{ marginBottom: 10 }}>
@@ -77,10 +75,10 @@ const Services = () => {
             </View>
           ))}
           {hasMore && (
-            <Button title="Load More" onPress={loadMore} disabled={isLoading} />
+            <TouchableOpacity style={styles.button} title="Load More" onPress={loadMore} disabled={isLoading} />
           )}
           {!hasMore && (
-            <Text style={{ fontSize: 16, marginTop: 10 }}>No more events to load</Text>
+            <Text style={{ fontSize: 16, marginTop: 10,textAlign:'center' }}>No more events to load</Text>
           )}
         </View>
       )}
@@ -90,4 +88,15 @@ const Services = () => {
 
 export default Services;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#3A3D42',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    color: '#AB8C56',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
+});
