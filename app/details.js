@@ -52,7 +52,7 @@ const Details = () => {
   }
   const onChange =({type}, selectedDate) => {
     if(type == 'set'){
-      const currentDate = selectedDate;
+      const currentDate = selectedDate || date;
       setDate(currentDate);
       if (Platform.OS === "android"){
         toggleDatePicker();
