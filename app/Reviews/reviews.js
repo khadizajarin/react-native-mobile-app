@@ -140,8 +140,7 @@ const Reviews = () => {
                                         <MaterialCommunityIcons 
                                             name={review.likedEmail && review.likedEmail.includes(user.email) ? "cards-heart" : "cards-heart-outline"} 
                                             size={18} 
-                                            color={review.likedEmail && review.likedEmail.includes(user.email) ? "#AB8C56" : "#AB8C56"} 
-                                        />
+                                            color={review.likedEmail && review.likedEmail.includes(user.email) ? "#AB8C56" : "#AB8C56"} />
                                     </Text>
                                     </TouchableOpacity>
 

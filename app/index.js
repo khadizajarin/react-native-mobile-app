@@ -10,10 +10,11 @@ import Reviews from './Reviews/reviews';
 import Details from './Details';
 import app from './Hooks/firebase.config';
 import Profile from './Profile/Profile';
-
 import LocationScreen from './Location';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import Register from './Home/register';
+
 
 
 const auth = initializeAuth(app, {
@@ -31,6 +32,7 @@ const ServicesStackScreen = () => (
   <ServicesStack.Navigator>
     <ServicesStack.Screen name="Services" component={Services}  options={{ headerShown: false }}/>
     <ServicesStack.Screen name="Details" component={Details}  options={{ headerShown: true }}/>
+    <ServicesStack.Screen name="Register" component={Register}  options={{ headerShown: true }}/>
   </ServicesStack.Navigator>
 );
 
@@ -62,13 +64,19 @@ const Layout = () => {
                 },
             }}>
                 <Drawer.Screen name="Home" component={Home} />
-                <Drawer.Screen name="Services" component={ServicesStackScreen} />
+                <Drawer.Screen name="Events" component={ServicesStackScreen} />
                 <Drawer.Screen name="Contact" component={Contact} />
+                {/* <Drawer.Screen name="Rating" component={Rating} /> */}
                 {user && (
                     <>
                         <Drawer.Screen name="Reviews" component={Reviews} />
                         <Drawer.Screen name="Location" component={LocationScreen} />
                         <Drawer.Screen name="Profile" component={Profile} />
+                    </>
+                )}
+                {!user && (
+                    <>
+                        <Drawer.Screen name="Register" component={Register} />
                     </>
                 )}
             </Drawer.Navigator>

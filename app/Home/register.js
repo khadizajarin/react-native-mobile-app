@@ -77,9 +77,13 @@ const Register = () => {
             <View style={styles.heroContent}>
             <Text style={styles.heroDescription}>Already have an account?</Text>
             <Text style={styles.heroDescription}>Create an account to access exclusive features.</Text>
-            <Link href="/" style={styles.button}>
-                <Text style={styles.buttonText}>Back to Login</Text>
-            </Link>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Home')}>
+              <Text style={styles.buttonText}>
+                Back to login
+              </Text>
+            </TouchableOpacity>
             </View>
         </View>
     </View>

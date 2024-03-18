@@ -4,7 +4,7 @@ import Service from './service';
 import { db } from "./Hooks/firebase.config";
 import { collection, query, orderBy, limit, getDocs, startAfter } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import {gsap, Back} from 'gsap-rn';
+// import {gsap, Back} from 'gsap-rn';
 
 const PAGE_SIZE = 5; // Number of items to fetch per page
 
@@ -13,7 +13,7 @@ const Services = () => {
   const [isLoading, setIsLoading] = useState(true); 
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true); // to track if there are more documents to load
-  gsap.to(this.ref, {duration:3, style:{right:0, left:50}, transform:{rotate:0,scale:1}, 	ease:Back.easeInOut});
+  // gsap.to(this.ref, {duration:3, style:{right:0, left:50}, transform:{rotate:0,scale:1}, 	ease:Back.easeInOut});
   
   const fetchServices = async () => {
     try {
@@ -67,7 +67,7 @@ const Services = () => {
         <ActivityIndicator size="large" color="#AB8C56" />
       ) : (
         <View style={{backgroundColor: "#ffffff", padding: 20 }}>
-          <Text  ref={ref=> this.ref = ref} style={{fontFamily: "serif", fontSize: 40, fontWeight: 'bold',color: '#3A3D42', }}>Explore Our Events!</Text>
+          <Text   style={{fontFamily: "serif", fontSize: 40, fontWeight: 'bold',color: '#3A3D42', }}>Explore Our Events!</Text>
           <Text style={{fontFamily: "serif", fontSize: 20, marginBottom: 8, color: '#3A3D42' }}>Explore a variety of event management sectors to find your perfect fit. From weddings radiating eternal love to lively birthday bashes and corporate excellence summits, we have it all. Dive into DIY workshops and unleash your creativity. Discover unforgettable experiences with us today.</Text>
           {events.map((event, id) => (
             <View key={id} style={{ marginBottom: 10 }}>
@@ -75,7 +75,7 @@ const Services = () => {
             </View>
           ))}
           {hasMore && (
-            <TouchableOpacity style={styles.button} title="Load More" onPress={loadMore} disabled={isLoading} />
+            <TouchableOpacity style={styles.button} title="Load More" onPress={loadMore} disabled={isLoading} ></TouchableOpacity>
           )}
           {!hasMore && (
             <Text style={{ fontSize: 16, marginTop: 10,textAlign:'center' }}>No more events to load</Text>

@@ -1,5 +1,5 @@
 import { Image, ScrollView, StyleSheet, Text, View,  Button, TouchableOpacity, TextInput, ActivityIndicator, Pressable, Platform } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import Events from './../assets/data';
 import { useRoute } from '@react-navigation/native';
 import useAuthentication from './Hooks/useAuthentication';

@@ -1,5 +1,5 @@
 import { Link, useNavigation } from 'expo-router';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet,  Alert, ToastAndroid } from 'react-native';
 import { app, db, collection, addDoc} from '../Hooks/firebase.config';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,  } from '@firebase/auth';
@@ -64,10 +64,12 @@ const Login = () => {
         <View style={styles.hero}>
             <View style={styles.heroContent}>
             <Text style={styles.heroDescription}>Effortlessly log in to know more about our exclusive social event management package.</Text>
-            <TouchableOpacity style={styles.button} >
-                <Link href="/register" style={[styles.heroDescription, styles.registerLink, {paddingHorizontal:60}]}>
-                <Text style={styles.buttonText}>Do not have an account yet? Please proceed to Register</Text>   
-            </Link>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Register')}>
+              <Text style={styles.buttonText}>
+                Do not have an account yet? Please proceed to Register
+              </Text>
             </TouchableOpacity>
            
             </View>

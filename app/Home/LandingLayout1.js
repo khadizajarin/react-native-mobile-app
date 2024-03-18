@@ -1,6 +1,6 @@
 import { useNavigation } from 'expo-router';
 import React from 'react';
-import { View, Text, Image, ScrollView, ImageBackground, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
+import { View, Text,  ScrollView,TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
 import 'tailwindcss/tailwind.css';
 import useAuthentication from '../Hooks/useAuthentication';
 import app from '../Hooks/firebase.config';
@@ -48,7 +48,7 @@ const LandingLayout1 = () => {
           </View>
         ) : (
           <View style={{ padding: 10 }} >
-            <Text style={{ fontFamily: "serif", fontSize: 31, fontWeight: 'bold', color: '#3A3D42', marginBottom: 10 }}>Welcome to EvePlano !</Text>
+            <Text  style={{ fontFamily: "serif", fontSize: 31, fontWeight: 'bold', color: '#3A3D42', marginBottom: 10 }}>Welcome to {"\n"}EvePlano !</Text>
             <Text style={{ fontFamily: "serif", fontSize: 18, color: '#3A3D42' }}>EvePlano is your one-stop platform for planning and managing social events with ease. Whether you are organizing a birthday party, wedding, corporate gathering, or any other social occasion, EvePlano simplifies the entire process.</Text>
           </View>
         )}

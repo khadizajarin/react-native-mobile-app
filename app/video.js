@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native'
-import YouTube from 'react-native-youtube';
+
 import YouTubePlayer from 'react-native-youtube-iframe';
 
 const Video = () => {
