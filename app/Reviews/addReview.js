@@ -16,7 +16,7 @@ const AddReview = () => {
             const newReview = { 
               comments: [],
               email: user.email,
-              isLikedByMe: '',
+              // isLikedByMe: '',
               reviewtext: reviewText
             };
 

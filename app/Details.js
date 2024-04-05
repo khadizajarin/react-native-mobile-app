@@ -137,7 +137,7 @@ const Details = () => {
                             onChangeText={text=>setTime(text)}
                           />
                           {showPicker && (<DateTimePicker mode='date' display='spinner' value={date} onChange={onChange}/>)}
-                          {!showPicker && (
+                          {/* {!showPicker && ( */}
                             <Pressable onPress={toggleDatePicker}>
                             <TextInput
                               placeholder="Date"
@@ -148,7 +148,7 @@ const Details = () => {
                               editable={false}
                             />
                           </Pressable>
-                          )}
+                          {/* )} */}
                           <TextInput
                             placeholder="Phone Number"
                             style={[styles.input, { color: '#3A3D42' }]}
